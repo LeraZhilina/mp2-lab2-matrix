@@ -68,6 +68,7 @@ TVector<ValType>::TVector(int s, int si)
 		StartIndex = si;
 		pVector = new ValType[Size];
 	}
+	else throw 0;
 
 } /*-------------------------------------------------------------------------*/
 
@@ -92,7 +93,10 @@ TVector<ValType>::~TVector()
 template <class ValType> // доступ
 ValType& TVector<ValType>::operator[](int pos)
 {
-	return pVector[pos - StartIndex];
+	if (pos >= StartIndex && pos < Size + StartIndex)
+		return pVector[pos - StartIndex];
+	else
+		throw 0;
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // сравнение
@@ -102,12 +106,10 @@ bool TVector<ValType>::operator==(const TVector &v) const
 	if (Size != v.Size || StartIndex != v.StartIndex)
 		k = false;
 	else
-	{
+	
 		for (int i = 0; i < Size; i++)
 			if (pVector[i] != v.pVector[i])
 				k = false;
-	}
-	 
 	return k;
 } /*-------------------------------------------------------------------------*/
 
@@ -172,13 +174,13 @@ TVector<ValType> TVector<ValType>::operator*(const ValType &val)
 template <class ValType> // сложение
 TVector<ValType> TVector<ValType>::operator+(const TVector<ValType> &v)
 {
-	if (Size = v.Size && StartIndex = v.StartIndex)
+	if (Size == v.Size && StartIndex == v.StartIndex)
+	{
+		TVector<ValType> res(*this);
 		for (int i = 0; i < Size; i++)
-		{
-			TVector<ValType> res = (*this);
-			res.pVector[i] = pVector[i] + v.pVector;
-			return res;
-		}
+			res.pVector[i] = res.pVector[i] + v.pVector[i];
+		return res;
+	}
 	else
 		throw 0;
 
@@ -187,14 +189,13 @@ TVector<ValType> TVector<ValType>::operator+(const TVector<ValType> &v)
 template <class ValType> // вычитание
 TVector<ValType> TVector<ValType>::operator-(const TVector<ValType> &v)
 {
-	if (Size = v.Size && StartIndex = v.StartIndex)
+	if (Size == v.Size && StartIndex == v.StartIndex)
+	{
+		TVector<ValType> res(*this);
 		for (int i = 0; i < Size; i++)
-		{
-			TVector<ValType> res = (*this);
-			res.pVector[i] = pVector[i] - v.pVector;
-		}
-			return res;
-		
+			res.pVector[i] = res.pVector[i] - v.pVector[i];
+		return res;
+	}
 	else
 		throw 0;
 } /*-------------------------------------------------------------------------*/
@@ -246,14 +247,22 @@ public:
 template <class ValType>
 TMatrix<ValType>::TMatrix(int s): TVector<TVector<ValType> >(s)
 {
-	for (int i=0;i<s;i++)
-		pVector[i]=TVector<ValType>(s-i,i);
+	if (s >= Size && s <= MAX_MATRIX_SIZE)
+	{
+		for (int i = 0; i < s; i++)
+			pVector[i] = TVector<ValType>(s - i, i);
+	}
+	else
+		throw 0;
 	
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // конструктор копирования
 TMatrix<ValType>::TMatrix(const TMatrix<ValType> &mt):
-  TVector<TVector<ValType> >(mt) {}
+  TVector<TVector<ValType> >(mt) {
+	for (int i = 0; i < Size; i++)
+		pVector[i] = mt.pVector[i];
+}
 
 template <class ValType> // конструктор преобразования типа
 TMatrix<ValType>::TMatrix(const TVector<TVector<ValType> > &mt):
@@ -268,13 +277,14 @@ bool TMatrix<ValType>::operator==(const TMatrix<ValType> &mt) const
 template <class ValType> // сравнение
 bool TMatrix<ValType>::operator!=(const TMatrix<ValType> &mt) const
 {
+	return TVector<TVector<ValType>>::operator!=(mt);
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // присваивание
 TMatrix<ValType>& TMatrix<ValType>::operator=(const TMatrix<ValType> &mt)
 {
-	return TVector<TVector<ValType>>::operator+(mt);
-	/*if (this != &mt)
+	//return TMatrix<TVector<ValType>>::operator+(mt);
+	if (this != &mt)
 	{
 		delete[] pVector;
 		Size = mt.Size;
@@ -282,7 +292,7 @@ TMatrix<ValType>& TMatrix<ValType>::operator=(const TMatrix<ValType> &mt)
 		for (int i = 0; i < Size; i++)
 			pVector[i] = mt.pVector[i];
 	}
-	return *this;*/
+	return *this;
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // сложение
@@ -298,7 +308,7 @@ template <class ValType> // вычитание
 TMatrix<ValType> TMatrix<ValType>::operator-(const TMatrix<ValType> &mt)
 {
 	if (Size == mt.Size)
-		return Vector<Vector<ValType>>::operator-(mt);
+		return TVector<TVector<ValType>>::operator-(mt);
 	else
 		throw 0;
 } /*-------------------------------------------------------------------------*/
