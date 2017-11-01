@@ -108,7 +108,7 @@ TEST(TVector, assign_operator_change_vector_size)
 	for(int i=0;i<10;i++)
 		v1[i]=1;
 	v1 = v2;
-	EXPECT_EQ(v1.GetSize(), 20);
+	EXPECT_EQ(20,v1.GetSize() );
 }
 
 TEST(TVector, can_assign_vectors_of_different_size)
@@ -240,8 +240,8 @@ TEST(TVector, can_multiply_vectors_with_equal_size)
 		v1[i] = 2;
 		v2[i] = 1;
 	}
-	v1 = v1 * v2;
-	EXPECT_EQ(v1, 20);
+	int v = v1 * v2;
+	EXPECT_EQ(20,v);
 }
 
 TEST(TVector, cant_multiply_vectors_with_not_equal_size)

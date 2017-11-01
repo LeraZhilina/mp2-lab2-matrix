@@ -44,14 +44,14 @@ TEST(TMatrix, copied_matrix_has_its_own_memory)
 TEST(TMatrix, can_get_size)
 {
   TMatrix<int> m(10);
-	EXPECT_EQ(m.GetSize(), 10);
+	EXPECT_EQ(10,m.GetSize() );
 }
 
 TEST(TMatrix, can_set_and_get_element)
 {
   TMatrix<int> m(10);
 	m[2][3] = 3;
-	EXPECT_EQ(m[2][3], 3);
+	EXPECT_EQ(3,m[2][3]);
 }
 
 TEST(TMatrix, throws_when_set_element_with_negative_index)
@@ -89,7 +89,7 @@ TEST(TMatrix, assign_operator_change_matrix_size)
   TMatrix<int> m1(10);
   TMatrix<int> m2(50);
   m2 = m1;
-	EXPECT_EQ(m2.GetSize(), 10);
+	EXPECT_EQ(10,m2.GetSize());
 }
 
 TEST(TMatrix, can_assign_matrices_of_different_size)
@@ -131,7 +131,7 @@ TEST(TMatrix, can_add_matrices_with_equal_size)
 	TMatrix<int> m2(10);
 	m2[2][4] = 5;
 	TMatrix<int> m3(m1 + m2);
-	EXPECT_EQ(m3[2][4], 8);
+	EXPECT_EQ(8,m3[2][4]);
 }
 
 TEST(TMatrix, cant_add_matrices_with_not_equal_size)
@@ -148,7 +148,7 @@ TEST(TMatrix, can_subtract_matrices_with_equal_size)
 	TMatrix<int> m2(10);
 	m2[2][4] = 3;
 	TMatrix<int> m3(m1 - m2);
-	EXPECT_EQ(m3[2][4], 2);
+	EXPECT_EQ(2,m3[2][4]);
 }
 
 
